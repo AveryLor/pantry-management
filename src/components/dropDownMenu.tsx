@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../lib/firebaseConfig'; // Adjust the path if needed
+import { db } from '../lib/firebaseConfig'; // Adjust path if needed
 
 interface PantryItem {
   id: string;
   name: string;
 }
 
-const DropdownMenu: React.FC = () => {
+const DropDownMenu: React.FC = () => {
   const [items, setItems] = useState<PantryItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>('');
 
@@ -46,6 +46,6 @@ const DropdownMenu: React.FC = () => {
       </select>
     </div>
   );
-};
+}
 
-export default DropdownMenu;
+export default DropDownMenu;
