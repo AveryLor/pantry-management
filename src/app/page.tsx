@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
@@ -31,6 +31,11 @@ const Home: React.FC = () => {
 
   const removeAllItems = () => {
     setInventory([]);
+  };
+
+  const formatDate = (date: Date) => {
+    // Format date here (for client-side rendering)
+    return new Intl.DateTimeFormat('en-US').format(date);
   };
 
   return (
@@ -77,7 +82,7 @@ const Home: React.FC = () => {
                     <TableCell>{item.name}</TableCell>
                     <TableCell align="right">{item.quantity}</TableCell>
                     <TableCell align="right">${item.price.toFixed(2)}</TableCell>
-                    <TableCell align="right">{item.lastUpdated.toLocaleString()}</TableCell>
+                    <TableCell align="right">{formatDate(item.lastUpdated)}</TableCell>
                   </TableRow>
                 ))
               ) : (
