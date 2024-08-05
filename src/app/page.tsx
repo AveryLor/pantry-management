@@ -132,3 +132,57 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+
+// TODO: Working on using components instead of adding everything together
+
+/*
+
+'use client'
+
+import React, { useState } from 'react';
+import { Box, CssBaseline } from '@mui/material';
+import Dashboard from '../components/Dashboard'
+import InventoryList from '../components/InventoryList';
+import AddRemoveItems from '../components/AddRemoveItems';
+import Analytics from '../components/Analytics';
+import Settings from '../components/Settings';
+
+type Page = 'Dashboard' | 'Inventory' | 'Add/Remove' | 'Analytics' | 'Settings';
+
+export default function Home() {
+  const [currentPage, setCurrentPage] = useState<Page>('Dashboard');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const handlePageChange = (pageName: Page) => {
+    setCurrentPage(pageName);
+  };
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'Dashboard':
+        return <Dashboard searchTerm={searchTerm} />;
+      case 'Inventory':
+        return <InventoryList searchTerm={searchTerm} />;
+      case 'Add/Remove':
+        return <AddRemoveItems searchTerm={searchTerm} />;
+      case 'Analytics':
+        return <Analytics searchTerm={searchTerm} />;
+      case 'Settings':
+        return <Settings searchTerm={searchTerm} />;
+      default:
+        return <Dashboard searchTerm={searchTerm} />;
+    }
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+        {renderCurrentPage()}
+      </Box>
+    </Box>
+  );
+}
+
+*/ 
