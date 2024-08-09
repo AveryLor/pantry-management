@@ -42,19 +42,19 @@ export default function RegisterForm() {
 
         console.log("Name: ", name);
 
-    return <div className="grid place-items-center h-screen">
+    return <><script type="module" src="login.js" defer></script><div className="grid place-items-center h-screen">
         <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
             <h1 className="text-xl front-bold my-4">
                 Enter the details
             </h1>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input onChange={e => setName(e.target.value)} type="text" placeholder="Full Name"/>
-                <input onChange={e => setEmail(e.target.value)} type="text" placeholder="Email"/>
-                <input onChange={e => setPassword(e.target.value)} type="text" placeholder="Password"/>
+                <input onChange={e => setName(e.target.value)} type="text" placeholder="Full Name" />
+                <input onChange={e => setEmail(e.target.value)} type="text" placeholder="Email" id="email"/>
+                <input onChange={e => setPassword(e.target.value)} type="text" placeholder="Password" id="password"/>
                 <button className="bg-green-600 cursor-pointer text-white px-6 py-2 rounded-s">
                     Register
                 </button>
-                { error && (
+                {error && (
                     <div className="bg-red-500 w-fit text-white text-sm py-1 px-3 rounded-md mt-2">
                         {error}
                     </div>
@@ -65,5 +65,5 @@ export default function RegisterForm() {
                 </Link>
             </form>
         </div>
-    </div>;
+    </div></>;
 }
