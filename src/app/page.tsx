@@ -1,158 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
-
-const Home: React.FC = () => {
-  const [inventory, setInventory] = useState([
-    { name: 'Apples', quantity: 10, price: 2.5, lastUpdated: new Date() },
-    { name: 'Bananas', quantity: 5, price: 1.2, lastUpdated: new Date() }
-  ]);
-  const [open, setOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const [error, setError] = useState('');
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleAddItem = () => {
-    if (!itemName || itemName.trim() === '') {
-      setError('Invalid item name');
-      return;
-    }
-    setInventory((prevInventory) => [
-      ...prevInventory,
-      { name: itemName, quantity: 1, price: 1.0, lastUpdated: new Date() }
-    ]);
-    setItemName('');
-    handleClose();
-  };
-
-  const removeAllItems = () => {
-    setInventory([]);
-  };
-
-  const formatDate = (date: Date) => {
-    // Format date here (for client-side rendering)
-    return new Intl.DateTimeFormat('en-US').format(date);
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 py-6">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
-        <Typography variant="h4" component="h1" className="text-center text-teal-600 font-bold mb-6">
-          🛒 Pantry Management 🛒
-        </Typography>
-        <div className="flex justify-between mb-4">
-          <div>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpen}
-              startIcon={<AddIcon />}
-            >
-              New Item
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={removeAllItems}
-              startIcon={<DeleteIcon />}
-              className="ml-2"
-            >
-              Remove All
-            </Button>
-          </div>
-        </div>
-        <TableContainer component={Paper} className="mb-4">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className="bg-teal-600 text-white font-bold">Item</TableCell>
-                <TableCell align="right" className="bg-teal-600 text-white font-bold">Quantity (lbs)</TableCell>
-                <TableCell align="right" className="bg-teal-600 text-white font-bold">Price</TableCell>
-                <TableCell align="right" className="bg-teal-600 text-white font-bold">Last Updated</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {inventory.length > 0 ? (
-                inventory.map((item, index) => (
-                  <TableRow key={index} className="odd:bg-teal-50">
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell align="right">{item.quantity}</TableCell>
-                    <TableCell align="right">${item.price.toFixed(2)}</TableCell>
-                    <TableCell align="right">{formatDate(item.lastUpdated)}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={4} align="center">
-                    <Typography>No items in inventory</Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {error && <Typography color="error" className="text-center mb-4">{error}</Typography>}
-      </div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-          <Typography id="modal-title" variant="h6" component="h2" className="text-teal-600">
-            Add Item
-          </Typography>
-          <div className="flex flex-col mt-4">
-            <TextField
-              id="item-name"
-              label="Item"
-              variant="outlined"
-              fullWidth
-              value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
-              className="mb-4"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddItem}
-            >
-              Add
-            </Button>
-          </div>
-        </Box>
-      </Modal>
-    </div>
-  );
-};
-
-export default Home;
-
-
-// TODO: Working on using components instead of adding everything together
-
-/*
-
-'use client'
-
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Box, CssBaseline } from '@mui/material';
-import Dashboard from '../components/Dashboard'
+import Dashboard from '../components/Dashboard';
 import InventoryList from '../components/InventoryList';
 import AddRemoveItems from '../components/AddRemoveItems';
-import Analytics from '../components/Analytics';
-import Settings from '../components/Settings';
 
 type Page = 'Dashboard' | 'Inventory' | 'Add/Remove' | 'Analytics' | 'Settings';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<Page>('Dashboard');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const router = useRouter();
 
   const handlePageChange = (pageName: Page) => {
     setCurrentPage(pageName);
@@ -175,6 +35,55 @@ export default function Home() {
     }
   };
 
+  // Handle login state here
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.ok) {
+        setIsAuthenticated(true);
+        router.push('/home'); // Redirect to home page after successful login
+      } else {
+        console.error('Login failed.');
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setIsAuthenticated(false);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="grid place-items-center h-screen">
+        <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+          <h1 className="text-xl font-bold my-4">Login</h1>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const email = (e.target as any).email.value;
+              const password = (e.target as any).password.value;
+              handleLogin(email, password);
+            }}
+            className="flex flex-col gap-3"
+          >
+            <input type="text" placeholder="Email" name="email" required />
+            <input type="password" placeholder="Password" name="password" required />
+            <button className="bg-green-600 cursor-pointer text-white px-6 py-2 rounded">Login</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -184,5 +93,3 @@ export default function Home() {
     </Box>
   );
 }
-
-*/ 
